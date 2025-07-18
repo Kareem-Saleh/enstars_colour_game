@@ -1,8 +1,8 @@
-const selected = new Set();
+export const selected = new Set();
 let selectedText = "You have selected";
 const agencySelected = document.querySelector(".agency-selected");
 const playBtn = document.querySelector(".play-btn");
-let playable = false;
+export let playable = false;
 
 function checkSelectedEmpty(selected) {
   if (selected.size !== 0) {
@@ -19,7 +19,11 @@ function checkSelectedEmpty(selected) {
 checkSelectedEmpty(selected);
 
 document.addEventListener("click", (event) => {
-  const clicked = event.target.closest(".agency");
+  const clicked = event.target.closest(".unit");
+
+  if (!clicked) {
+    return;
+  }
   const id = clicked.id;
 
   if (clicked) {
