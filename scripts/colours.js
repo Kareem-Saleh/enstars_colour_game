@@ -20,7 +20,7 @@ export const colours = {
   fine: {
     "Eichi Tenshouin": {
       colour: "#FFE58E",
-      img: "imgs/characters/starmakerEichi_Tenshouin_4.webp",
+      img: "imgs/characters/starmaker/Eichi_Tenshouin_4.webp",
     },
     "Wataru Hibiki": {
       colour: "#AEE0DF",

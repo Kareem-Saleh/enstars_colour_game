@@ -1,10 +1,20 @@
 export const selected = new Set();
-let selectedText = "You have selected";
-const agencySelected = document.querySelector(".agency-selected");
-const playBtn = document.querySelector(".play-btn");
 export let playable = false;
 
-function checkSelectedEmpty(selected) {
+let selectedText = "You have selected";
+const playBtn = document.querySelector(".play-btn");
+const agencySelected = document.querySelector(".agency-selected");
+
+export function resetPlayable() {
+  playable = false;
+}
+
+export function resetSelected() {
+  selected.clear();
+}
+
+export function checkSelectedEmpty(selected) {
+  const playBtn = document.querySelector(".play-btn");
   if (selected.size !== 0) {
     playBtn.style.backgroundColor = "rgb(59, 246, 59)";
     playBtn.style.cursor = "pointer";
@@ -20,6 +30,7 @@ checkSelectedEmpty(selected);
 
 document.addEventListener("click", (event) => {
   const clicked = event.target.closest(".unit");
+  const agencySelected = document.querySelector(".agency-selected");
 
   if (!clicked) {
     return;

@@ -8,6 +8,7 @@ body {
   min-height: 100dvh;
   padding: 75px;
   background-color: rgb(255, 255, 255);
+  display: grid;
 }
 
 .left h1,
@@ -30,6 +31,19 @@ body {
   color: rgb(176, 176, 176);
 }
 
+.left {
+  display: flex;
+  flex-direction: column;
+}
+
+.timer {
+  margin-top: 40px;
+  margin-bottom: 30px;
+  font-family: monospace;
+  font-size: 3.5rem;
+  font-weight: bold;
+}
+
 .agency-selected {
   font-size: 1.2rem;
   color: white;
@@ -39,9 +53,8 @@ body {
 
 .container {
   display: grid;
-  grid-template-columns: 42ch 0.6fr;
+  grid-template-columns: 42ch 1fr;
   gap: 100px;
-  /* border: 5px solid black; */
 }
 
 .row {
@@ -76,7 +89,8 @@ body {
 }
 
 .unit img,
-.agency img {
+.agency img,
+.character-container img {
   width: 80px;
   pointer-events: none;
   user-select: none; /* Standard syntax */
@@ -96,7 +110,8 @@ body {
   background-color: rgb(236, 236, 236);
 }
 
-.play-btn {
+.play-btn,
+.game-btns button {
   margin: 0;
   padding: 0;
   border: none;
@@ -108,16 +123,53 @@ body {
   -webkit-appearance: none; /* Removes iOS styling */
   -moz-appearance: none;
   appearance: none;
+  font-family: monospace;
+}
+
+.game-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.game-btns .finish,
+.game-btns .restart,
+.game-btns .quit {
+  font-size: 1.6rem;
+  padding: 10px;
+  width: 50%;
+}
+
+.game-btns .finish {
+  background-color: greenyellow;
+}
+
+.game-btns .finish:hover {
+  background-color: rgb(136, 205, 33);
+}
+
+.game-btns .restart {
+  background-color: rgb(84, 240, 227);
+}
+
+.game-btns .restart:hover {
+  background-color: rgb(64, 207, 195);
+}
+
+.game-btns .quit {
+  background-color: red;
+}
+
+.game-btns .quit:hover {
+  background-color: rgb(189, 23, 23);
 }
 
 .play-btn {
   background-color: rgb(59, 246, 59);
   color: black;
-  padding: 20px 40px;
-  margin-top: 45px;
-  border-radius: 5px;
-  font-family: monospace;
+  padding: 10px;
   font-size: 1.5rem;
+  margin-top: 50px;
 }
 
 .play-btn:hover {
@@ -127,6 +179,80 @@ body {
 .selected {
   border-color: rgb(41, 62, 163);
   box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.576);
+}
+
+.colour-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+.current-colour {
+  height: 60px;
+  background-color: black;
+}
+
+.colour-info p {
+  font-family: monospace;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.character-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 35px;
+  border: 4px solid rgba(0, 0, 0, 0);
+  background-color: rgb(248, 248, 248);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.353);
+  padding: 30px;
+  border-radius: 20px;
+}
+
+.character {
+  border-radius: 10px;
+  border: 3px solid rgba(0, 0, 0, 0);
+  padding: 10px;
+}
+
+.character:hover {
+  box-shadow: 0 0 10px rgb(0, 0, 0);
+  border-color: green;
+  cursor: pointer;
+  background-color: rgb(236, 236, 236);
+}
+
+.character-container img {
+  width: 80px;
+}
+
+.end {
+  all: unset;
+  padding: 10px;
+  border: 3px solid rgba(0, 0, 0, 0);
+  border-radius: 20px;
+}
+
+.correct,
+.correct:hover {
+  background-color: greenyellow;
+}
+
+.wrong,
+.wrong:hover {
+  background-color: red;
+}
+
+.score {
+  font-family: monospace;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.none {
+  display: none;
 }
 
 @media (width < 1150px) {
