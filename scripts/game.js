@@ -4,12 +4,28 @@ import {
   resetPlayable,
   resetSelected,
   checkSelectedEmpty,
+  setPlayable,
 } from "./select_agency.js";
 import { colours } from "./colours.js";
 
-const playBtn = document.querySelector(".play-btn");
 const leftContainer = document.querySelector(".left");
 const rightContainer = document.querySelector(".right");
+
+let currentColour;
+let currentColouridx = 0;
+let shuffledColours;
+let playingLength;
+let playingColours;
+let allColoursSelected = false;
+let picked = [];
+let score = 0;
+
+function resetGameVariables() {
+  allColoursSelected = false;
+  picked = [];
+  score = 0;
+  playingLength = 0;
+}
 
 function quit() {
   leftContainer.innerHTML = `
@@ -19,8 +35,16 @@ function quit() {
     <p class="agency-selected">
       Select the group / groups you want to play!
     </p>
-  </div>
-  <button class="play-btn">Play!</button>
+    </div>
+    <button class="play-btn">Play!</button>
+    <div class="links">
+      <a href="https://x.com/xppppppplol">
+        <img class="twitter" src="imgs/other/twitter-svgrepo-com.svg" />
+      </a>
+      <a href="https://github.com/Kareem-Saleh">
+        <img class="github" src="imgs/other/github-svgrepo-com.svg" />
+      </a>
+    </div>
   `;
 
   rightContainer.innerHTML = `
@@ -101,6 +125,11 @@ function quit() {
             </div>
           </div>
         </div>`;
+
+  resetPlayable();
+  resetSelected();
+  checkSelectedEmpty(selected);
+  resetGameVariables();
 }
 
 function play() {
@@ -114,7 +143,9 @@ function play() {
       <p>Current Colour:</p>
       <div class="current-colour"></div>
     </div>
-    <div class="timer">00:12</div>
+    <p class="colour-name">
+    </p>
+    <div class="timer">00:00</div>
     <div class="game-btns">
       <button class="finish">Finish</button>
       <button class="restart">Restart</button>
@@ -124,27 +155,46 @@ function play() {
 
     rightContainer.innerHTML = `<div class="character-container none"></div>`;
 
+    clock();
+
     const characterContainer = document.querySelector(".character-container");
     characterContainer.classList.remove("none");
 
     // rendering characters
     const toRender = [];
+    playingColours = [];
     selected.forEach((unit) => {
       const unitObj = colours[unit];
       Object.entries(unitObj).forEach(([name, characterObj]) => {
         const obj = {
+          unit: unit,
           name: name,
           object: characterObj,
         };
         toRender.push(obj);
+        playingColours.push(characterObj["colour"]);
       });
     });
+
     const shuffledRender = shuffleArray(toRender);
+
     shuffledRender.forEach((characterObj) => {
       characterContainer.innerHTML += `<div class="character">
-          <img src="${characterObj["object"]["img"]}" id="${characterObj["name"]}" />
+          <img class="character-img" src="${characterObj["object"]["img"]}" id="${characterObj["name"]}" />
         </div>`;
     });
+
+    shuffledColours = shuffleArray(playingColours);
+    playingLength = shuffledColours.length;
+
+    currentColour = shuffledColours[currentColouridx];
+    document.body.style.setProperty("--current-colour", currentColour);
+
+    const colourName = document.querySelector(".colour-name");
+    colourName.innerText = currentColour;
+
+    const playingColourBox = document.querySelector(".current-colour");
+    playingColourBox.style.backgroundColor = currentColour;
   }
 }
 
@@ -166,40 +216,178 @@ function finish() {
     <button class="quit">Quit</button>
   </div>
   `;
+
+  const allSelectedObj = {};
+
+  selected.forEach((unit) => {
+    const unitObj = colours[unit];
+    Object.assign(allSelectedObj, unitObj);
+  });
+
+  picked.forEach((pick) => {
+    if (pick["colour"] === allSelectedObj[pick["name"]]["colour"]) {
+      score++;
+    }
+  });
+
+  const scoreBox = document.querySelector(".score");
+  scoreBox.innerText = `You got ${score}/${picked.length} correct!`;
+
+  resetPlayable();
+  resetGameVariables();
+}
+
+function restart() {
+  resetGameVariables();
+  setPlayable();
+  play();
 }
 
 leftContainer.addEventListener("click", (event) => {
-  if (!playable) {
-    return;
-  }
-
   if (event.target.classList.contains("play-btn")) {
-    play();
+    if (playable) {
+      play();
+    }
   }
-});
-
-leftContainer.addEventListener("click", (event) => {
   if (event.target.classList.contains("quit")) {
     quit();
-    resetPlayable();
-    resetSelected();
-    checkSelectedEmpty(selected);
   }
-});
-
-leftContainer.addEventListener("click", (event) => {
   if (event.target.classList.contains("finish")) {
-    finish();
+    if (allColoursSelected) {
+      finish();
+    }
   }
-});
-
-leftContainer.addEventListener("click", (event) => {
   if (event.target.classList.contains("restart")) {
-    play();
+    restart();
   }
 });
 
 document.addEventListener("click", (event) => {
-  if (event.target.classList.contains(".character")) {
+  const playingColourBox = document.querySelector(".current-colour");
+  const colourName = document.querySelector(".colour-name");
+  const character = event.target.closest(".character");
+  const finishBtn = document.querySelector(".finish");
+
+  if (character) {
+    // handles when a player picks a character that already has a colour
+    if (character.classList.contains("selected")) {
+      const selectedColour = rgbToHex(character.style.backgroundColor);
+      shuffledColours.splice(0, 0, selectedColour);
+
+      character.classList.remove("selected");
+      character.style.backgroundColor = "unset";
+      character.style.setProperty("--border-colour", "var(--current-colour)");
+
+      if (picked.length === playingLength) {
+        allColoursSelected = false;
+        document.body.style.setProperty("--current-colour", selectedColour);
+        playingColourBox.style.backgroundColor = selected;
+        playingColourBox.innerText = "";
+        colourName.innerText = selectedColour;
+        finishBtn.style.backgroundColor = "rgb(182, 182, 182)";
+        finishBtn.style.cursor = "auto";
+      }
+
+      const characterName = character.querySelector(".character-img").id;
+
+      for (let i = 0; i < picked.length; i++) {
+        if (picked[i].name === characterName) {
+          picked.splice(i, 1);
+        }
+      }
+
+      document.body.style.setProperty("--current-colour", selectedColour);
+      playingColourBox.style.backgroundColor = selectedColour;
+      colourName.innerText = selectedColour;
+
+      currentColour = shuffledColours[0];
+      return;
+    }
+
+    // set colour and push the answer to be checked later
+    character.style.backgroundColor = currentColour;
+    character.style.setProperty("--border-colour", currentColour);
+    const characterName = character.querySelector(".character-img").id;
+
+    character.classList.add("selected");
+
+    picked.push({
+      name: characterName,
+      colour: currentColour,
+    });
+
+    shuffledColours.splice(0, 1);
+    currentColour = shuffledColours[0];
+
+    document.body.style.setProperty("--current-colour", currentColour);
+    playingColourBox.style.backgroundColor = currentColour;
+    colourName.innerText = currentColour;
+
+    // handles reaching end of picking all the colours
+    if (picked.length === playingLength) {
+      document.body.style.setProperty("--current-colour", "black");
+      playingColourBox.style.backgroundColor = "black";
+      playingColourBox.innerText = "No more colours left!";
+      colourName.innerText = "";
+      finishBtn.style.backgroundColor = "rgb(59, 246, 59)";
+      finishBtn.style.cursor = "pointer";
+
+      finishBtn.addEventListener("mouseenter", () => {
+        finishBtn.style.backgroundColor = "rgba(36, 208, 36, 1)";
+      });
+
+      finishBtn.addEventListener("mouseleave", () => {
+        finishBtn.style.backgroundColor = "rgb(59, 246, 59)";
+      });
+
+      allColoursSelected = true;
+      return;
+    }
   }
 });
+
+function clock() {
+  const timer = document.querySelector(".timer");
+  let timeElapsed = 0;
+  let time;
+
+  let interval = setInterval(() => {
+    if (!playable) {
+      clearInterval(interval);
+    }
+    timeElapsed++;
+    let minutes = Math.floor(timeElapsed / 60);
+    let seconds = timeElapsed % 60;
+
+    if (minutes < 10) {
+      minutes = `0${minutes}`;
+    }
+
+    if (seconds < 10) {
+      seconds = `0${seconds}`;
+    }
+
+    time = `${minutes}:${seconds}`;
+    timer.innerText = time;
+  }, 1000);
+}
+
+function rgbToHex(rgb) {
+  // Extract the RGB values using a regex
+  const match = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+  if (!match) {
+    return rgb; // Return original if not in expected format
+  }
+
+  // Convert each RGB component to hex
+  const hex = (x) => {
+    const hex = parseInt(x).toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
+  };
+
+  const r = hex(match[1]);
+  const g = hex(match[2]);
+  const b = hex(match[3]);
+
+  return `#${r}${g}${b}`.toUpperCase();
+}

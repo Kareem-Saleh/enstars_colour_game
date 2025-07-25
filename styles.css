@@ -5,6 +5,8 @@
 }
 
 body {
+  --current-colour: black;
+
   min-height: 100dvh;
   padding: 75px;
   background-color: rgb(255, 255, 255);
@@ -110,6 +112,10 @@ body {
   background-color: rgb(236, 236, 236);
 }
 
+.unit-selected {
+  background-color: rgb(214, 214, 214);
+}
+
 .play-btn,
 .game-btns button {
   margin: 0;
@@ -141,11 +147,8 @@ body {
 }
 
 .game-btns .finish {
-  background-color: greenyellow;
-}
-
-.game-btns .finish:hover {
-  background-color: rgb(136, 205, 33);
+  background-color: rgba(182, 182, 182, 1);
+  cursor: auto;
 }
 
 .game-btns .restart {
@@ -176,11 +179,6 @@ body {
   background-color: rgb(19, 206, 19);
 }
 
-.selected {
-  border-color: rgb(41, 62, 163);
-  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.576);
-}
-
 .colour-info {
   display: flex;
   flex-direction: column;
@@ -189,8 +187,13 @@ body {
 }
 
 .current-colour {
+  font-family: monospace;
+  font-size: 1.5rem;
+  color: white;
   height: 60px;
-  background-color: black;
+  padding: 10px;
+  /* background-color: black; */
+  border: 3px solid black;
 }
 
 .colour-info p {
@@ -212,15 +215,21 @@ body {
 
 .character {
   border-radius: 10px;
-  border: 3px solid rgba(0, 0, 0, 0);
+  border: 5px solid rgba(0, 0, 0, 0);
   padding: 10px;
 }
 
 .character:hover {
-  box-shadow: 0 0 10px rgb(0, 0, 0);
-  border-color: green;
+  --border-colour: var(--current-colour);
+
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.627);
+  border-color: var(--border-colour);
   cursor: pointer;
-  background-color: rgb(236, 236, 236);
+  background-color: rgb(255, 255, 255);
+}
+
+.selected {
+  border: 5px solid rgba(0, 0, 0, 0);
 }
 
 .character-container img {
@@ -253,6 +262,34 @@ body {
 
 .none {
   display: none;
+}
+
+.colour-name {
+  font-family: monospace;
+  font-size: 1.1rem;
+  margin-top: 20px;
+}
+
+.corrections {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 50px;
+}
+
+.correct-message {
+  font-family: monospace;
+  font-size: 1.1rem;
+}
+
+.links {
+  display: flex;
+  gap: 20px;
+  margin-top: 50px;
+}
+
+.links img {
+  width: 50px;
 }
 
 @media (width < 1150px) {

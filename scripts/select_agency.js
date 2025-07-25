@@ -2,11 +2,13 @@ export const selected = new Set();
 export let playable = false;
 
 let selectedText = "You have selected";
-const playBtn = document.querySelector(".play-btn");
-const agencySelected = document.querySelector(".agency-selected");
 
 export function resetPlayable() {
   playable = false;
+}
+
+export function setPlayable() {
+  playable = true;
 }
 
 export function resetSelected() {
@@ -18,6 +20,19 @@ export function checkSelectedEmpty(selected) {
   if (selected.size !== 0) {
     playBtn.style.backgroundColor = "rgb(59, 246, 59)";
     playBtn.style.cursor = "pointer";
+
+    playBtn.addEventListener("mouseenter", () => {
+      if (playable) {
+        playBtn.style.backgroundColor = "rgba(36, 208, 36, 1)";
+      }
+    });
+
+    playBtn.addEventListener("mouseleave", () => {
+      if (playable) {
+        playBtn.style.backgroundColor = "rgb(59, 246, 59)";
+      }
+    });
+
     playable = true;
   } else {
     playBtn.style.backgroundColor = "rgba(182, 182, 182, 1)";
@@ -38,7 +53,7 @@ document.addEventListener("click", (event) => {
   const id = clicked.id;
 
   if (clicked) {
-    clicked.classList.toggle("selected");
+    clicked.classList.toggle("unit-selected");
 
     if (selected.has(id)) {
       selected.delete(id);
