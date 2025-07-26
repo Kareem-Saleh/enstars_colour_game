@@ -45,7 +45,7 @@ function quit() {
       <a href="https://x.com/xppppppplol">
         <img class="twitter" src="imgs/other/twitter-round-svgrepo-com.svg" />
       </a>
-      <a href="https://github.com/Kareem-Saleh">
+      <a href="https://github.com/Kareem-Saleh/enstars_colour_game">
         <img class="github" src="imgs/other/github-142-svgrepo-com.svg" />
       </a>
     </div>
