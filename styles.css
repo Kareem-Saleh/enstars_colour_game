@@ -279,7 +279,7 @@ body {
 
 .correct-message {
   font-family: monospace;
-  font-size: 1.1rem;
+  font-size: 1.3rem;
 }
 
 .links {
@@ -289,7 +289,12 @@ body {
 }
 
 .links img {
-  width: 50px;
+  width: 38px;
+}
+
+.name-end {
+  background-color: black;
+  color: white;
 }
 
 @media (width < 1150px) {

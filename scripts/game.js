@@ -19,12 +19,16 @@ let playingColours;
 let allColoursSelected = false;
 let picked = [];
 let score = 0;
+let timeElapsed = 0;
+let clockInterval;
 
 function resetGameVariables() {
   allColoursSelected = false;
   picked = [];
   score = 0;
   playingLength = 0;
+  timeElapsed = 0;
+  clearInterval(clockInterval);
 }
 
 function quit() {
@@ -39,10 +43,10 @@ function quit() {
     <button class="play-btn">Play!</button>
     <div class="links">
       <a href="https://x.com/xppppppplol">
-        <img class="twitter" src="imgs/other/twitter-svgrepo-com.svg" />
+        <img class="twitter" src="imgs/other/twitter-round-svgrepo-com.svg" />
       </a>
       <a href="https://github.com/Kareem-Saleh">
-        <img class="github" src="imgs/other/github-svgrepo-com.svg" />
+        <img class="github" src="imgs/other/github-142-svgrepo-com.svg" />
       </a>
     </div>
   `;
@@ -133,6 +137,8 @@ function quit() {
 }
 
 function play() {
+  timeElapsed = 0;
+
   if (!playable) {
     return;
   } else {
@@ -154,8 +160,6 @@ function play() {
     `;
 
     rightContainer.innerHTML = `<div class="character-container none"></div>`;
-
-    clock();
 
     const characterContainer = document.querySelector(".character-container");
     characterContainer.classList.remove("none");
@@ -180,8 +184,8 @@ function play() {
 
     shuffledRender.forEach((characterObj) => {
       characterContainer.innerHTML += `<div class="character">
-          <img class="character-img" src="${characterObj["object"]["img"]}" id="${characterObj["name"]}" />
-        </div>`;
+      <img class="character-img" src="${characterObj["object"]["img"]}" id="${characterObj["name"]}" />
+      </div>`;
     });
 
     shuffledColours = shuffleArray(playingColours);
@@ -195,6 +199,8 @@ function play() {
 
     const playingColourBox = document.querySelector(".current-colour");
     playingColourBox.style.backgroundColor = currentColour;
+
+    clock();
   }
 }
 
@@ -207,10 +213,13 @@ function shuffleArray(array) {
 }
 
 function finish() {
+  const finishTime = generateTime(timeElapsed);
+
   leftContainer.innerHTML = `
   <h1>Enstars Colour Quiz</h1>
   <h2>For the best experience please play on desktop</h2>
-  <p class="score">You got 3/6 correct!</p>
+  <p class="score"></p>
+  <div class="timer">${finishTime}</div>
   <div class="game-btns">
     <button class="restart">Restart</button>
     <button class="quit">Quit</button>
@@ -224,9 +233,32 @@ function finish() {
     Object.assign(allSelectedObj, unitObj);
   });
 
+  rightContainer.innerHTML = `<div class="corrections"></div>`;
+  const correctionsDiv = document.querySelector(".corrections");
+
   picked.forEach((pick) => {
     if (pick["colour"] === allSelectedObj[pick["name"]]["colour"]) {
       score++;
+      correctionsDiv.innerHTML += `
+      <p class="correct-message">
+        <b>✔️ CORRECT</b>
+        <span class="name-end">${pick.name}</span> was
+        <span style="background-color: ${pick.colour}">${pick.colour}</span>
+      </p>
+      `;
+    } else {
+      correctionsDiv.innerHTML += `
+      <p class="correct-message">
+        <b>❌ INCORRECT</b>
+        You picked
+        <span style="background-color: ${pick.colour}">${
+        pick.colour
+      }</span> for <span class="name-end">${pick.name}</span>, but it was
+        <span style="background-color: ${
+          allSelectedObj[pick["name"]]["colour"]
+        }">${allSelectedObj[pick["name"]]["colour"]}</span>
+      </p>
+      `;
     }
   });
 
@@ -239,6 +271,7 @@ function finish() {
 
 function restart() {
   resetGameVariables();
+  clearInterval(clockInterval);
   setPlayable();
   play();
 }
@@ -348,26 +381,15 @@ document.addEventListener("click", (event) => {
 
 function clock() {
   const timer = document.querySelector(".timer");
-  let timeElapsed = 0;
   let time;
 
-  let interval = setInterval(() => {
+  clockInterval = setInterval(() => {
     if (!playable) {
-      clearInterval(interval);
+      clearInterval(clockInterval);
     }
-    timeElapsed++;
-    let minutes = Math.floor(timeElapsed / 60);
-    let seconds = timeElapsed % 60;
+    timeElapsed += 1;
 
-    if (minutes < 10) {
-      minutes = `0${minutes}`;
-    }
-
-    if (seconds < 10) {
-      seconds = `0${seconds}`;
-    }
-
-    time = `${minutes}:${seconds}`;
+    time = generateTime(timeElapsed);
     timer.innerText = time;
   }, 1000);
 }
@@ -390,4 +412,20 @@ function rgbToHex(rgb) {
   const b = hex(match[3]);
 
   return `#${r}${g}${b}`.toUpperCase();
+}
+
+function generateTime(time) {
+  let minutes = Math.floor(time / 60);
+  let seconds = time % 60;
+
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+
+  if (seconds < 10) {
+    seconds = `0${seconds}`;
+  }
+
+  const timeText = `${minutes}:${seconds}`;
+  return timeText;
 }
