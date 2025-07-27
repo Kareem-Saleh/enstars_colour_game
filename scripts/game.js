@@ -130,6 +130,10 @@ function quit() {
           </div>
         </div>`;
 
+  if (document.querySelector(".colour-info-small")) {
+    document.querySelector(".colour-info-small").remove();
+  }
+
   resetPlayable();
   resetSelected();
   checkSelectedEmpty(selected);
@@ -174,6 +178,8 @@ function play() {
       <p class="colour-name-small">
       `;
       document.body.appendChild(smallInfoDiv);
+    } else {
+      document.querySelector(".current-colour-small").innerText = "";
     }
 
     const characterContainer = document.querySelector(".character-container");
@@ -257,6 +263,8 @@ function finish() {
 
   rightContainer.innerHTML = `<div class="corrections"></div>`;
   const correctionsDiv = document.querySelector(".corrections");
+
+  document.querySelector(".colour-info-small").remove();
 
   picked.forEach((pick) => {
     if (pick["colour"] === allSelectedObj[pick["name"]]["colour"]) {
