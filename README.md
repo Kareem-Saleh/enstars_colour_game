@@ -11,5 +11,4 @@ This game was inspired by the [Love Live Colour Quiz!](https://love-live-color-q
 - You can reselect your choices by clicking a character that has a colour selected already
 - Press Finish to check your score!
 
-
-
+If you enjoy the game, consider [donating](https://ko-fi.com/lmaoxpppp) ~~to help fuel my gacha addiction!!!!! #thanks #yay~~
