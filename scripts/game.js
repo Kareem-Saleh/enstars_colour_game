@@ -136,6 +136,10 @@ function quit() {
   resetGameVariables();
 }
 
+if (window.innerWidth < 680) {
+  console.log("hi");
+}
+
 function play() {
   timeElapsed = 0;
 
@@ -148,8 +152,8 @@ function play() {
     <div class="colour-info">
       <p>Current Colour:</p>
       <div class="current-colour"></div>
+      <p class="colour-name">
     </div>
-    <p class="colour-name">
     </p>
     <div class="timer">00:00</div>
     <div class="game-btns">
@@ -159,10 +163,20 @@ function play() {
     </div>
     `;
 
-    rightContainer.innerHTML = `<div class="character-container none"></div>`;
+    rightContainer.innerHTML = `<div class="character-container"></div>`;
+
+    if (!document.querySelector(".colour-info-small")) {
+      const smallInfoDiv = document.createElement("div");
+      smallInfoDiv.className = "colour-info-small";
+      smallInfoDiv.innerHTML = `
+      <p>Current Colour:</p>
+      <div class="current-colour-small"></div>
+      <p class="colour-name-small">
+      `;
+      document.body.appendChild(smallInfoDiv);
+    }
 
     const characterContainer = document.querySelector(".character-container");
-    characterContainer.classList.remove("none");
 
     // rendering characters
     const toRender = [];
@@ -197,8 +211,16 @@ function play() {
     const colourName = document.querySelector(".colour-name");
     colourName.innerText = currentColour;
 
+    const colourNameSmall = document.querySelector(".colour-name-small");
+    colourNameSmall.innerText = currentColour;
+
     const playingColourBox = document.querySelector(".current-colour");
     playingColourBox.style.backgroundColor = currentColour;
+
+    const playingColourBoxSmall = document.querySelector(
+      ".current-colour-small"
+    );
+    playingColourBoxSmall.style.backgroundColor = currentColour;
 
     clock();
   }
@@ -297,7 +319,9 @@ leftContainer.addEventListener("click", (event) => {
 
 document.addEventListener("click", (event) => {
   const playingColourBox = document.querySelector(".current-colour");
+  const playingColourBoxSmall = document.querySelector(".current-colour-small");
   const colourName = document.querySelector(".colour-name");
+  const colourNameSmall = document.querySelector(".colour-name-small");
   const character = event.target.closest(".character");
   const finishBtn = document.querySelector(".finish");
 
@@ -314,9 +338,16 @@ document.addEventListener("click", (event) => {
       if (picked.length === playingLength) {
         allColoursSelected = false;
         document.body.style.setProperty("--current-colour", selectedColour);
+
         playingColourBox.style.backgroundColor = selected;
         playingColourBox.innerText = "";
+
+        playingColourBoxSmall.style.backgroundColor = selected;
+        playingColourBoxSmall.innerText = "";
+
         colourName.innerText = selectedColour;
+        colourNameSmall.innerText = selectedColour;
+
         finishBtn.style.backgroundColor = "rgb(182, 182, 182)";
         finishBtn.style.cursor = "auto";
       }
@@ -330,8 +361,12 @@ document.addEventListener("click", (event) => {
       }
 
       document.body.style.setProperty("--current-colour", selectedColour);
+
       playingColourBox.style.backgroundColor = selectedColour;
+      playingColourBoxSmall.style.backgroundColor = selectedColour;
+
       colourName.innerText = selectedColour;
+      colourNameSmall.innerText = selectedColour;
 
       currentColour = shuffledColours[0];
       return;
@@ -356,12 +391,20 @@ document.addEventListener("click", (event) => {
     playingColourBox.style.backgroundColor = currentColour;
     colourName.innerText = currentColour;
 
+    playingColourBoxSmall.style.backgroundColor = currentColour;
+    colourNameSmall.innerText = currentColour;
+
     // handles reaching end of picking all the colours
     if (picked.length === playingLength) {
       document.body.style.setProperty("--current-colour", "black");
       playingColourBox.style.backgroundColor = "black";
       playingColourBox.innerText = "No more colours left!";
       colourName.innerText = "";
+
+      playingColourBoxSmall.style.backgroundColor = "black";
+      playingColourBoxSmall.innerText = "No more colours left!";
+      colourNameSmall.innerText = "";
+
       finishBtn.style.backgroundColor = "rgb(59, 246, 59)";
       finishBtn.style.cursor = "pointer";
 

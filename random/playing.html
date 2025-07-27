@@ -18,26 +18,32 @@
       href="imgs/favicon/favicon-16x16.png"
     />
     <link rel="manifest" href="/site.webmanifest" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="../styles.css" />
     <script src="scripts/select_agency.js" type="module" defer></script>
     <script src="scripts/game.js" type="module" defer></script>
     <script src="scripts/colours.js" type="module" defer></script>
   </head>
   <body>
     <div class="container">
-      <div class="left left-game">
+      <div class="left">
         <h1>Enstars Colour Quiz</h1>
         <h2>For the best experience please play on desktop</h2>
-        <div class="colour-info">
-          <p>Current Colour:</p>
-          <div class="current-colour"></div>
+        <div class="game-info">
+          <div class="colour-info">
+            <p>Current Colour:</p>
+            <div class="current-colour"></div>
+          </div>
+          <div class="timer">00:12</div>
+          <div class="game-btns">
+            <button class="finish">Finish</button>
+            <button class="restart">Restart</button>
+            <button class="quit">Quit</button>
+          </div>
         </div>
-        <div class="timer">00:12</div>
-        <div class="game-btns">
-          <button class="finish">Finish</button>
-          <button class="restart">Restart</button>
-          <button class="quit">Quit</button>
-        </div>
+      </div>
+      <div class="colour-info-small">
+        <p>Current Colour:</p>
+        <div class="current-colour"></div>
       </div>
       <div class="right">
         <div class="character-container">
